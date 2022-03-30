@@ -6,7 +6,7 @@ Import the project into Eclipse:
 
 - Run server: Run the BankSystemServer folder 
 
-**Example: **
+**Example:**
 
 Starting server
 
@@ -40,7 +40,7 @@ socketProbability of packetloss:
 
 - Run client: Run the BankSystem folder
 
-**Example: **
+**Example:**
 
 Enter Server IP Address: 
 
