@@ -2,63 +2,60 @@ package services;
 
 import java.io.IOException;
 import java.net.InetAddress;
-
 import bank.Bank;
-import main.Console;
-import message.BytePacker;
-import message.ByteUnpacker;
+import main.ConsoleLogger;
+import message.Marshall;
+import message.Unmarshall;
+import transmission.Socket;
 import message.OneByteInt;
-import socket.Socket;
 
 // Handle account closure
 public class CloseAccountService extends Service {
+	protected final static String ACCOUNTNUMBER = "accNum";
 	protected final static String NAME = "Name";
-	protected final static String PIN = "Pin";
-	protected final static String ACCNUM = "accNum";
-	private CallbackHandlerClass callbackHandler;
+	protected final static String PASSWORD = "Password";
+	private CallbackHandler callbackHandler;
 
 	// Handle callback service for clients (the ones that subscribe to the service)
-	public CloseAccountService(CallbackHandlerClass callbackHandler){
-		super(new ByteUnpacker.Builder()
-						.setType(NAME, ByteUnpacker.TYPE.STRING)
-						.setType(ACCNUM, ByteUnpacker.TYPE.INTEGER)
-						.setType(PIN, ByteUnpacker.TYPE.STRING)
-						.build());
-		this.callbackHandler = callbackHandler;						
+	public CloseAccountService(CallbackHandler callbackHandler) {
+		super(new Unmarshall.Builder()
+				.setType(NAME, Unmarshall.TYPE.STRING)
+				.setType(ACCOUNTNUMBER, Unmarshall.TYPE.INTEGER)
+				.setType(PASSWORD, Unmarshall.TYPE.STRING)
+				.build());
+		this.callbackHandler = callbackHandler;
 	}
-	
+
 	@Override
-	public BytePacker handleService(InetAddress clientAddress, int clientPortNumber, byte[] dataFromClient, Socket socket) {
+	public Marshall handleService(InetAddress clientAddress, int clientPortNumber, byte[] dataFromClient,
+			Socket socket) {
 		String reply = "";
-		ByteUnpacker.UnpackedMsg unpackedMsg = this.getUnpacker().parseByteArray(dataFromClient);
-		String accHolderName = unpackedMsg.getString(NAME);
-		int accNum = unpackedMsg.getInteger(ACCNUM);
-		String accPin = unpackedMsg.getString(PIN);
-		Console.debug("Account No.: " + accNum);
-		int messageId = unpackedMsg.getInteger(super.getMessageId());
-		int ret = Bank.closeAccount(accHolderName,accNum ,accPin);
-		OneByteInt status = new OneByteInt(0); 
-		if (ret == 1){
-			reply = String.format("=====================\nAccount %d successfully deleted\n=====================", accNum);
-			BytePacker replyMessageSubscribers = super.generateReply(status, messageId, reply);
+		Unmarshall.UnpackedMsg unmarshaledMsg = this.getUnpacker().parseByteArray(dataFromClient);
+		String accHolderName = unmarshaledMsg.getString(NAME);
+		int accNum = unmarshaledMsg.getInteger(ACCOUNTNUMBER);
+		String accountPassword = unmarshaledMsg.getString(PASSWORD);
+		ConsoleLogger.debug("Account No.: " + accNum);
+		int messageId = unmarshaledMsg.getInteger(super.getMessageId());
+		int ret = Bank.closeAccount(accHolderName, accNum, accountPassword);
+		OneByteInt status = new OneByteInt(0);
+		if (ret == 1) {
+			reply = String.format("=====================\nAccount %d successfully deleted\n=====================",
+					accNum);
+			Marshall replyMessageSubscribers = super.generateReply(status, messageId, reply);
 			callbackHandler.broadcast(replyMessageSubscribers);
-		}
-		else if(ret==-1){
-			 reply = String.format("Invalid Account No. Please try again.");
-		}
-		else if(ret == -2){
+		} else if (ret == -2) {
 			reply = String.format("Invalid Password. Please try again");
-		}
-		else if (ret == -3) {
+		} else if (ret == -1) {
+			reply = String.format("Invalid Account No. Please try again.");
+		} else if (ret == -3) {
 			reply = String.format("This account number is not under your name. Please try again");
 		}
-		
-		BytePacker replyMessageClient = super.generateReply(status, messageId, reply);
-		
+
+		Marshall replyMessageClient = super.generateReply(status, messageId, reply);
+
 		return replyMessageClient;
 	}
-	
-	
+
 	@Override
 	public String ServiceName() {
 		return "Close Account";

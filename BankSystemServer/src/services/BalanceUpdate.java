@@ -1,68 +1,64 @@
 package services;
 
-import java.io.IOException;
 import java.net.InetAddress;
-
+import java.io.IOException;
 import bank.Bank;
-import message.BytePacker;
-import message.ByteUnpacker;
-import message.OneByteInt;
-import socket.Socket;
 import bank.Account;
+import message.Marshall;
+import message.Unmarshall;
+import transmission.Socket;
+import message.OneByteInt;
 
 // Handles depositing/withdrawl to/from account
-
 public class BalanceUpdate extends Service {
+	protected final static String ACCOUNTNUMBER = "accNum";
 	protected final static String NAME = "Name";
-	protected final static String ACCNUM = "accNum";
-	protected final static String PIN = "Pin";
-	protected final static String CHOICE = "choice";
+	protected final static String PASSWORD = "Password";
 	protected final static String AMOUNT = "amount";
 	protected final static String CURRENCY = "currency";
+	protected final static String CHOICE = "choice";
 
-	private CallbackHandlerClass callbackHandler;
-	
+	private CallbackHandler callbackHandler;
+
 	// Handle callback service for clients (the ones that subscribe to the service)
-	public BalanceUpdate(CallbackHandlerClass callbackHandler){
-		super(new ByteUnpacker.Builder()
-						.setType(NAME, ByteUnpacker.TYPE.STRING)
-						.setType(ACCNUM, ByteUnpacker.TYPE.INTEGER)
-						.setType(CURRENCY, ByteUnpacker.TYPE.STRING)
-						.setType(PIN, ByteUnpacker.TYPE.STRING)
-						.setType(CHOICE, ByteUnpacker.TYPE.INTEGER)
-						.setType(AMOUNT, ByteUnpacker.TYPE.DOUBLE)
-						.build());	
+	public BalanceUpdate(CallbackHandler callbackHandler) {
+		super(new Unmarshall.Builder()
+				.setType(NAME, Unmarshall.TYPE.STRING)
+				.setType(ACCOUNTNUMBER, Unmarshall.TYPE.INTEGER)
+				.setType(CURRENCY, Unmarshall.TYPE.STRING)
+				.setType(PASSWORD, Unmarshall.TYPE.STRING)
+				.setType(CHOICE, Unmarshall.TYPE.INTEGER)
+				.setType(AMOUNT, Unmarshall.TYPE.DOUBLE)
+				.build());
 		this.callbackHandler = callbackHandler;
 	}
-	
-	
+
 	@Override
-	public BytePacker handleService(InetAddress clientAddress, int clientPortNumber, byte[] dataFromClient, Socket socket) {
-		ByteUnpacker.UnpackedMsg unpackedMsg = this.getUnpacker().parseByteArray(dataFromClient);
-		String accHolderName = unpackedMsg.getString(NAME);
-		int accNum = unpackedMsg.getInteger(ACCNUM);
-		String currency = unpackedMsg.getString(CURRENCY);
-		String accPin = unpackedMsg.getString(PIN);
-		int choice = unpackedMsg.getInteger(CHOICE);
-		double amount = unpackedMsg.getDouble(AMOUNT);
-		int messageId = unpackedMsg.getInteger(super.getMessageId());
+	public Marshall handleService(InetAddress clientAddress, int clientPortNumber, byte[] dataFromClient,
+			Socket socket) {
+		Unmarshall.UnpackedMsg unmarshaledMsg = this.getUnpacker().parseByteArray(dataFromClient);
+		String accHolderName = unmarshaledMsg.getString(NAME);
+		int accNum = unmarshaledMsg.getInteger(ACCOUNTNUMBER);
+		String currency = unmarshaledMsg.getString(CURRENCY);
+		String accountPassword = unmarshaledMsg.getString(PASSWORD);
+		int choice = unmarshaledMsg.getInteger(CHOICE);
+		double amount = unmarshaledMsg.getDouble(AMOUNT);
+		int messageId = unmarshaledMsg.getInteger(super.getMessageId());
 		String reply = "";
 
-		double accBalance = Bank.updateBalance(accHolderName,accNum, accPin, choice, amount, currency);
+		double accountBalance = Bank.updateBalance(accHolderName, accNum, accountPassword, choice, amount, currency);
 		OneByteInt status = new OneByteInt(0);
-		
-		if(accBalance==-1){
+
+		if (accountBalance == -1) {
 			reply = "Invalid Account No. Please try again.";
-		}
-		else if(accBalance ==-2){
+		} else if (accountBalance == -2) {
 			reply = "Invalid Password. Please try again.";
-		}
-		else if(accBalance==-3){
+		} else if (accountBalance == -3) {
 			Account user = Bank.AllTheAccounts.get(accNum);
-			String userCurrency = user.getAccCurrency();
+			String userCurrency = user.getaccountCurrency();
 
 			if (!userCurrency.equals(currency)) {
-				if(userCurrency.equals("USD")) {
+				if (userCurrency.equals("USD")) {
 					amount = 0.73 * amount;
 				}
 
@@ -70,20 +66,19 @@ public class BalanceUpdate extends Service {
 					amount = 1.36 * amount;
 				}
 			}
-			reply = "You have insufficient funds. Your current balance is: " + Bank.checkBalance(accNum, accPin) + userCurrency;
-		}
-		else if(accBalance==-4){
+			reply = "You have insufficient funds. Your current balance is: "
+					+ Bank.checkBalance(accNum, accountPassword)
+					+ userCurrency;
+		} else if (accountBalance == -4) {
 			reply = "Invalid Choice. Please try again";
-		}
-		else if(accBalance==-5) {
+		} else if (accountBalance == -5) {
 			reply = "Account number does not match name. Please try again.";
-		}
-		else{
+		} else {
 			Account user = Bank.AllTheAccounts.get(accNum);
-			String userCurrency = user.getAccCurrency();
+			String userCurrency = user.getaccountCurrency();
 
 			if (!userCurrency.equals(currency)) {
-				if(userCurrency.equals("USD")) {
+				if (userCurrency.equals("USD")) {
 					amount = 0.73 * amount;
 				}
 
@@ -93,28 +88,28 @@ public class BalanceUpdate extends Service {
 			}
 			String choiceType = "";
 			String choiceType2 = "";
-			if(choice == 1){
+			if (choice == 1) {
 				choiceType = "Deposit Funds";
 				choiceType2 = "Amount Deposited to Account No.";
-			} 
-			else if(choice==0){
+			} else if (choice == 0) {
 				choiceType = "Withdraw Funds";
 				choiceType2 = "Amount Withdrawn from Account No.";
 			}
-			reply = String.format("=====================\n%s \n%s %d: %f \nCurrent Account Balance: %f %s\n=====================" ,choiceType, choiceType2, accNum, amount, accBalance, userCurrency);
-			BytePacker replyMessageSubscriber = super.generateReply(status, messageId, reply);
+			reply = String.format(
+					"=====================\n%s \n%s %d: %f \nCurrent Account Balance: %f %s\n=====================",
+					choiceType, choiceType2, accNum, amount, accountBalance, userCurrency);
+			Marshall replyMessageSubscriber = super.generateReply(status, messageId, reply);
 			callbackHandler.broadcast(replyMessageSubscriber);
 		}
-		
-		BytePacker replyMessageClient = super.generateReply(status, messageId, reply);
+
+		Marshall replyMessageClient = super.generateReply(status, messageId, reply);
 		return replyMessageClient;
-		
+
 	}
 
 	@Override
 	public String ServiceName() {
 		return "Make Deposit/Withdrawal";
 	}
-	
-	
+
 }

@@ -1,13 +1,14 @@
 package main;
+
 import java.util.Scanner;
 
 // Class to print results to console
 
-public class Console {
+public class ConsoleLogger {
 	private Scanner scanner;
 	static boolean debug_info = true;
 
-	public Console(Scanner scanner) {
+	public ConsoleLogger(Scanner scanner) {
 		this.scanner = scanner;
 	}
 
@@ -35,6 +36,23 @@ public class Console {
 		}
 	}
 
+	public int askForInteger(int min, int max, String question) {
+		System.out.println(question);
+		int choice = min;
+		while (true) {
+			try {
+				choice = Integer.parseInt(scanner.nextLine());
+				if (choice >= min && choice <= max) {
+					return choice;
+				} else {
+					System.out.println("Invalid Choice!");
+					System.out.println(question);
+				}
+			} catch (NumberFormatException ignored) {
+			}
+		}
+	}
+
 	public double askForDouble(String question) {
 		System.out.println(question);
 		return askForDouble();
@@ -49,40 +67,26 @@ public class Console {
 		}
 	}
 
+	public double askForDouble(double min, double max, String question) {
+		System.out.println(question);
+		double choice = min;
+		while (true) {
+			try {
+				choice = Double.parseDouble(scanner.nextLine());
+				if (choice >= min && choice <= max) {
+					return choice;
+				} else {
+					System.out.println("Invalid Choice!");
+					System.out.println(question);
+				}
+			} catch (NumberFormatException ignored) {
+			}
+		}
+	}
+
 	public String askForString(String question) {
 		System.out.println(question);
 		return scanner.nextLine();
 	}
-	public int askForInteger(int min, int max, String question){
-		System.out.println(question);
-		int choice = min;
-		while(true){
-			try{
-				choice = Integer.parseInt(scanner.nextLine());
-				if(choice >= min && choice <=max){
-					return choice;
-				}
-				else{
-					System.out.println("Invalid Choice!");
-					System.out.println(question);
-				}
-			}catch(NumberFormatException ignored){}
-		}
-	}
-	public double askForDouble(double min, double max, String question){
-		System.out.println(question);
-		double choice = min;
-		while(true){
-			try{
-				choice = Double.parseDouble(scanner.nextLine());
-				if(choice >= min && choice <=max){
-					return choice;
-				}
-				else{
-					System.out.println("Invalid Choice!");
-					System.out.println(question);
-				}
-			}catch(NumberFormatException ignored){}
-		}
-	}
+
 }
