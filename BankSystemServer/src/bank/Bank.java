@@ -143,7 +143,7 @@ public class Bank {
 		// the account are different
 		// Convert sender's amount to receiver's account currency
 		if (!senderCurr.equals(receiverCurr)) {
-			if (senderCurr == "USD") {
+			if (senderCurr.equals("USD")) {
 				receiverAmt = amount * 1.36;
 			} else {
 				receiverAmt = amount * 0.73;

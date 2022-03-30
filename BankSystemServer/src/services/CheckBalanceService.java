@@ -35,14 +35,13 @@ public class CheckBalanceService extends Service {
 		String reply = "";
 		OneByteInt status = new OneByteInt(0);
 
-		Account user = Bank.AllTheAccounts.get(accNum);
-		String currency = user.getaccountCurrency();
-
 		if (balance == -1) {
 			reply = "Invalid Account No. Please try again.";
 		} else if (balance == -2) {
 			reply = "Invalid Password. Please try again";
 		} else {
+			Account user = Bank.AllTheAccounts.get(accNum);
+			String currency = user.getaccountCurrency();
 			reply = String.format(
 					"=====================\nAccount No.: %d\nCurrent Account Balance: %.2f %s\n=====================",
 					accNum, balance, currency);

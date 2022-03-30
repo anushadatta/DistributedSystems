@@ -11,7 +11,6 @@ import java.util.HashMap;
 import message.Marshall;
 import services.CallbackHandler;
 import services.Service;
-import transmission.CorruptedTransmission;
 import transmission.NormalTransmission;
 import transmission.ReceivingLossTransmission;
 import transmission.SendingLossTransmission;
@@ -95,8 +94,4 @@ public class Server {
 		this.mySocket = new SendingLossTransmission(this.mySocket, socketProbability);
 	}
 
-	// Create corrupted messages
-	public void useCorruptedSocket(double socketProbability) {
-		this.mySocket = new CorruptedTransmission(this.mySocket, socketProbability);
-	}
 }

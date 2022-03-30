@@ -51,6 +51,8 @@ public class BalanceTransfer extends Service {
 		} else if (accountBalance == -2) {
 			reply = "Invalid Password. Please try again.";
 		} else if (accountBalance == -3) {
+			Account sender = Bank.AllTheAccounts.get(accNum);
+			String senderCurrency = sender.getaccountCurrency();
 			reply = "You have insufficient funds. Your current balance is: "
 					+ Bank.checkBalance(accNum, accountPassword)
 					+ senderCurrency;

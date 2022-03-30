@@ -45,8 +45,6 @@ public class Application {
 					client.useSendingLossSocket(socketProbability);
 				} else if (socketType == 3) {
 					client.useReceivingLossSocket(socketProbability);
-				} else if (socketType == 4) {
-					client.useCorruptedSocket(socketProbability);
 				}
 			}
 

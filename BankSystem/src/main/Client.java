@@ -2,7 +2,6 @@ package main;
 
 import message.Marshall;
 import services.Service;
-import transmission.CorruptedTransmission;
 import transmission.NormalTransmission;
 import transmission.ReceivingLossTransmission;
 import transmission.SendingLossTransmission;
@@ -101,10 +100,6 @@ public class Client {
 
 	public void useSendingLossSocket(double socketProbability) {
 		this.mySocket = new SendingLossTransmission(this.mySocket, socketProbability);
-	}
-
-	public void useCorruptedSocket(double socketProbability) {
-		this.mySocket = new CorruptedTransmission(this.mySocket, socketProbability);
 	}
 
 }
