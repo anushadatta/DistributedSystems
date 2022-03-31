@@ -18,9 +18,7 @@ public class SendingLossTransmission extends WrapperSocket {
 		this.socketProbability = socketProbability;
 	}
 
-	// Higher socketProbability - higher chance of sending successfully i.e. lower
-	// packet
-	// loss
+	// Higher socketProbability - higher chance of sending successfully i.e. lower packet loss
 	public void send(Marshall msg, InetAddress address, int port) throws IOException {
 		if (random.nextDouble() < socketProbability) {
 			super.send(msg, address, port);
