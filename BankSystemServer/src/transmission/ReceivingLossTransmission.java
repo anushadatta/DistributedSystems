@@ -17,8 +17,7 @@ public class ReceivingLossTransmission extends WrapperSocket {
 		this.socketProbability = socketProbability;
 	}
 
-	// Higher socketProbability - higher chance of receiving successfully i.e. lower
-	// packet loss
+	// Higher socketProbability - higher chance of receiving successfully i.e. lower packet loss
 	public void receive(DatagramPacket p) throws IOException, SocketTimeoutException {
 		if (random.nextDouble() < this.socketProbability) {
 			super.receive(p);
