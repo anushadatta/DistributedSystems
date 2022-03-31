@@ -15,10 +15,7 @@ public class Marshall {
 		propToValue = new HashMap<>();
 	}
 
-	/**
-	 * Add message field to list of fields, and put message field and value in
-	 * hashmap
-	 */
+	// Create hashmap with field and its value
 	public void setValue(String key, Object value) {
 		properties.add(key);
 		propToValue.put(key, value);
