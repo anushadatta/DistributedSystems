@@ -62,8 +62,8 @@ public class BalanceTransfer extends Service {
 			Account sender = Bank.AllTheAccounts.get(accNum);
 			String senderCurrency = sender.getaccountCurrency();
 			reply = String.format(
-					"=====================\n Successful Transfer of Funds\nFrom: %d\nTo: %d\nAmount:%.2f\nCurrency:%s\nBalance: %.2f\n=====================",
-					accNum, receiver, amount, senderCurrency, accountBalance);
+					"===================== Successful Transfer of Funds =====================\nFrom: %d\nTo: %d\nAmount:%.2f\nCurrency:%s\nBalance: %.2f %s\n ================================================================",
+					accNum, receiver, amount, senderCurrency, accountBalance, senderCurrency);
 			String replyToSubscribers = String.format("%.2f %s transferred from Account No.: %d to Account No.: %d",
 					amount, senderCurrency, accNum, receiver);
 			Marshall replyMessageToSubcribers = super.generateReply(status, messageId, replyToSubscribers);
