@@ -96,8 +96,8 @@ public class BalanceUpdate extends Service {
 				choiceType2 = "Amount Withdrawn from Account No.";
 			}
 			reply = String.format(
-					"===================== %s ===================== \n%s %d: %f %s \nCurrent Account Balance: %f %s\n=====================",
-					choiceType, choiceType2, accNum, amount, currency, accountBalance, userCurrency);
+					"===================== %s ===================== \n%s %d: %f %s \nCurrent Account Balance: %f %s\n ================================================================",
+					choiceType, choiceType2, accNum, amount, userCurrency, accountBalance, userCurrency);
 			Marshall replyMessageSubscriber = super.generateReply(status, messageId, reply);
 			callbackHandler.broadcast(replyMessageSubscriber);
 		}
