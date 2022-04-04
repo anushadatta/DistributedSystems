@@ -24,7 +24,7 @@ public class ReceivingLossTransmission extends WrapperSocket {
 			super.receive(p);
 		} else {
 			try {
-				Thread.sleep(200);
+				Thread.sleep(1000);
 				ConsoleLogger.debug("Simulate Packet Loss when Receiving");
 			} catch (InterruptedException e) {
 				e.printStackTrace();
