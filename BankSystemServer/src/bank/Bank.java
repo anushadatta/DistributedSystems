@@ -113,12 +113,13 @@ public class Bank {
 		if (acc != null) {
 			if (acc.getaccountPassword().equals(password)) {
 				balance = acc.getaccountBalance();
+				System.out.println(acc.getaccountBalance());		
 			} else
 				balance = -2; // invalid password
 		} else {
 			balance = -1; // account does not exist
 		}
-		return balance;
+		return balance;		
 	}
 
 	// Transfer funds from one account to another

@@ -49,11 +49,12 @@ public class ServerApplication {
 
 			// Specify transmission mode
 			int socketType = console.askForInteger(1, 3,
-					"Select Transmission Mode: \n1)Normal Transmission\n2)Sending Transmission Loss");
+					"Select Transmission Mode: \n1)Normal Transmission\n2)Sending Transmission Loss\n");
 			if (socketType == 2) {
 				double socketProbability = 1 - console.askForDouble(0.0, 1.0, "socketProbability of packetloss:");
 				server.useSendingLossSocket(socketProbability);
 			}
+
 
 			// Handle removal of expired subscribers
 			callbackHandler = new CallbackHandler(socket);
