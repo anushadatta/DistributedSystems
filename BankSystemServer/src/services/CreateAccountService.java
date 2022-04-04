@@ -41,7 +41,7 @@ public class CreateAccountService extends Service {
 
 		OneByteInt status = new OneByteInt(0);
 		String reply = String.format(
-				"Successful Account Creation ================== \n Account Holder Name: %s \n Account No.: %d \n Currency: %s \n Balance: %f \n ===================== ",
+				"================== Successful Account Creation ================== \n Account Holder Name: %s \n Account No.: %d \n Currency: %s \n Balance: %f \n ===================== ",
 				accHolderName, accNum, accountCurrency, accountBalance);
 		Marshall replyMessageClient = super.generateReply(status, messageId, reply);
 

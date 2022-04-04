@@ -89,15 +89,15 @@ public class BalanceUpdate extends Service {
 			String choiceType = "";
 			String choiceType2 = "";
 			if (choice == 1) {
-				choiceType = "Deposit Funds";
+				choiceType = "Funds Deposited";
 				choiceType2 = "Amount Deposited to Account No.";
 			} else if (choice == 0) {
-				choiceType = "Withdraw Funds";
+				choiceType = "Funds Withdrawn";
 				choiceType2 = "Amount Withdrawn from Account No.";
 			}
 			reply = String.format(
-					"=====================\n%s \n%s %d: %f \nCurrent Account Balance: %f %s\n=====================",
-					choiceType, choiceType2, accNum, amount, accountBalance, userCurrency);
+					"===================== %s ===================== \n%s %d: %f %s \nCurrent Account Balance: %f %s\n=====================",
+					choiceType, choiceType2, accNum, amount, currency, accountBalance, userCurrency);
 			Marshall replyMessageSubscriber = super.generateReply(status, messageId, reply);
 			callbackHandler.broadcast(replyMessageSubscriber);
 		}
