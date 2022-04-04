@@ -35,7 +35,7 @@ public class Application {
 
 			// Choose the desired transmission mode - in order to simulate faults and losses
 			int socketType = console.askForInteger(1, 3,
-					"Select Transmission Mode: \n1)Normal Transmission\n2)Sending Loss Transmission\n3)Receiving Loss Transmission\n");
+					"Select Transmission Mode: \n1)Normal Transmission\n2)Sending Loss Transmission\n");
 			if (socketType != 1) {
 
 				double socketProbability = 1.0
