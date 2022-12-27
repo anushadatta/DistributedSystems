@@ -1,82 +1,49 @@
-# Final-CZ4013
+# Distributed Banking System 
 
-How to run: 
+> CZ4013 Distributed Systems \
+> School of Computer Science and Engineering \
+> Nanyang Technological University
 
-Import the project into Eclipse: 
+This distributed banking system follows the client-server architecture, which rests on principles of interprocess communication and remote invocation to facilitate communication between clients and a server using the User Datagram Protocol (UDP).
 
-- Run server: Run the BankSystemServer folder 
-
-**Example when interacting with command line:**
-
-Starting server
-
-Enter IP address on which the server is being hosted:
-
-localhost
-
-Enter Port No. for server to listen at:
-
-2222
-
-Choose Server type: 
-
-1)At-Least-Once
-
-2)At-Most-Once
-
-1
-
-Select Transmission Mode: 
-
-1)Normal Transmission
-
-2)Sending Transmission Loss
-
-2
-
-socketProbability of packetloss:
-
-0.7
-
-- Run client: Run the BankSystem folder
-
-**Example when interacting with command line:**
-
-Enter Server IP Address: 
-
-localhost
-
-Enter Server Port No.: 
-
-2222
-
-Enter desired socket timeout (in seconds): 
-
-5
-
-Select Transmission Mode: 
-
-1)Normal Transmission
-
-2)Sending Loss Transmission
-
-3)Receiving Loss Transmission
-
-1
+### System Services
 
 1. Create Account
 
 2. Close Account
 
-3. Make Deposit/Withdrawal
+3. Deposit/Withdrawal Funds
 
-4. Register Callback
+4. View Account Balance [Idempotent]
 
-5. Check Balance
+5. Transfer Funds [Non-Idempotent]
 
-6. Transfer Funds
+6. Monitor Updates (Register Callback)
 
-Enter your desired service request: 
 
-1
+### Transmission Modes 
+
+In addition to normal transmission, the system allows simulation of transmission loss by specifying socket probability of packet loss and socket timeout in seconds. 
+
+* Normal Transmission
+
+* Sending Loss Transmission
+
+* Receiving Loss Transmission
+
+### Invocation Sematics
+
+Further experimentation has been conducted to determine the robustness of inbuilt error handling and the effects of different invocation semantics on fault-tolerance.
+
+* At-Least-Once
+
+* At-Most-Once
+
+
+### Team
+
+* Anusha Datta
+* Amrita Ravishankar 
+* Truong Cong Cuong
+
 
